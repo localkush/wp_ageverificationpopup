@@ -1,0 +1,372 @@
+/**
+ * Age Verification Popup Admin Styles
+ */
+
+/* Admin Container Layout */
+.avp-admin-container {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.avp-admin-main {
+    flex: 1;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.avp-admin-sidebar {
+    width: 300px;
+}
+
+/* Sidebar Boxes */
+.avp-admin-sidebar .postbox {
+    margin-bottom: 20px;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+.avp-admin-sidebar .postbox h3.hndle {
+    padding: 12px 16px;
+    margin: 0;
+    background: #f6f7f7;
+    border-bottom: 1px solid #c3c4c7;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+    border-radius: 4px 4px 0 0;
+}
+
+.avp-admin-sidebar .postbox .inside {
+    padding: 16px;
+}
+
+.avp-admin-sidebar .postbox ol {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.avp-admin-sidebar .postbox li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.avp-admin-sidebar .postbox p {
+    margin: 0 0 12px;
+    line-height: 1.5;
+}
+
+.avp-admin-sidebar .postbox h4 {
+    margin: 16px 0 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+/* Form Styling Enhancements */
+.avp-admin-main .form-table th {
+    width: 200px;
+    padding: 20px 10px 20px 0;
+    vertical-align: top;
+}
+
+.avp-admin-main .form-table td {
+    padding: 20px 10px;
+}
+
+.avp-admin-main .form-table input[type="text"],
+.avp-admin-main .form-table input[type="url"],
+.avp-admin-main .form-table input[type="number"],
+.avp-admin-main .form-table textarea {
+    border: 1px solid #8c8f94;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: border-color 0.2s ease;
+}
+
+.avp-admin-main .form-table input[type="text"]:focus,
+.avp-admin-main .form-table input[type="url"]:focus,
+.avp-admin-main .form-table input[type="number"]:focus,
+.avp-admin-main .form-table textarea:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.avp-admin-main .form-table .description {
+    margin-top: 8px;
+    font-style: italic;
+    color: #646970;
+    font-size: 13px;
+}
+
+/* Button Styling */
+.avp-admin-sidebar .button {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+#avp-clear-cookies {
+    background: #d63638;
+    border-color: #d63638;
+    color: #ffffff;
+}
+
+#avp-clear-cookies:hover {
+    background: #b32d2e;
+    border-color: #b32d2e;
+}
+
+/* Success Notice Styling */
+.notice.notice-success {
+    border-left-color: #00a32a;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .avp-admin-container {
+        flex-direction: column;
+    }
+    
+    .avp-admin-sidebar {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    
+    .avp-admin-sidebar .postbox {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 782px) {
+    .avp-admin-container {
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .avp-admin-main {
+        padding: 15px;
+    }
+    
+    .avp-admin-main .form-table th,
+    .avp-admin-main .form-table td {
+        display: block;
+        width: 100%;
+        padding: 10px 0;
+    }
+    
+    .avp-admin-main .form-table th {
+        border-bottom: none;
+        padding-bottom: 5px;
+    }
+    
+    .avp-admin-main .form-table td {
+        padding-top: 0;
+        border-top: none;
+    }
+    
+    .avp-admin-sidebar {
+        grid-template-columns: 1fr;
+    }
+    
+    .avp-admin-sidebar .postbox .inside {
+        padding: 12px;
+    }
+}
+
+/* Loading State */
+.avp-admin-main.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.avp-admin-main.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 32px;
+    height: 32px;
+    margin: -16px 0 0 -16px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #2271b1;
+    border-radius: 50%;
+    animation: avp-admin-spin 1s linear infinite;
+}
+
+@keyframes avp-admin-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Form Validation */
+.avp-admin-main input:invalid {
+    border-color: #d63638;
+    box-shadow: 0 0 0 1px #d63638;
+}
+
+.avp-admin-main input:valid {
+    border-color: #00a32a;
+}
+
+/* Tooltip Styling */
+.avp-tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: help;
+}
+
+.avp-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1d2327;
+    color: #ffffff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 1000;
+}
+
+.avp-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1d2327;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.avp-tooltip:hover::after,
+.avp-tooltip:hover::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Section Headers */
+.avp-section-header {
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f1;
+}
+
+.avp-section-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+/* Status Indicators */
+.avp-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.avp-status.active {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.avp-status.inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.avp-status::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* Code Blocks */
+.avp-code {
+    background: #f6f7f7;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 12px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #1d2327;
+    overflow-x: auto;
+}
+
+/* Help Text */
+.avp-help-text {
+    background: #f0f6fc;
+    border: 1px solid #c3c4c7;
+    border-left: 4px solid #2271b1;
+    border-radius: 4px;
+    padding: 12px 16px;
+    margin: 16px 0;
+}
+
+.avp-help-text h4 {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.avp-help-text p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #646970;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .avp-admin-main {
+        background: #1d2327;
+        color: #f0f0f1;
+    }
+    
+    .avp-admin-sidebar .postbox {
+        background: #1d2327;
+        border-color: #3c434a;
+    }
+    
+    .avp-admin-sidebar .postbox h3.hndle {
+        background: #23282d;
+        border-color: #3c434a;
+        color: #f0f0f1;
+    }
+    
+    .avp-code {
+        background: #23282d;
+        border-color: #3c434a;
+        color: #f0f0f1;
+    }
+    
+    .avp-help-text {
+        background: #1e2124;
+        border-color: #3c434a;
+        color: #f0f0f1;
+    }
+} 
