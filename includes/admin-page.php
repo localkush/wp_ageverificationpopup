@@ -35,6 +35,11 @@ $date_label = get_option('avp_date_label', __('Enter your birth date:', 'age-ver
 <div class="wrap">
     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
     
+    <div class="avp-help-text">
+        <h4><?php _e('Global Default Settings', 'age-verification-popup'); ?></h4>
+        <p><?php _e('These are the default settings that will be used by all Age Verification widgets. You can override styling and some content settings in individual Elementor widgets, but core functionality settings (like minimum age and redirect URLs) are controlled here.', 'age-verification-popup'); ?></p>
+    </div>
+    
     <div class="avp-admin-container">
         <div class="avp-admin-main">
             <form method="post" action="">
@@ -171,15 +176,15 @@ $date_label = get_option('avp_date_label', __('Enter your birth date:', 'age-ver
                 <h3 class="hndle"><?php _e('How to Use', 'age-verification-popup'); ?></h3>
                 <div class="inside">
                     <ol>
-                        <li><?php _e('Configure your settings above and save them.', 'age-verification-popup'); ?></li>
+                        <li><?php _e('Configure your global settings above and save them.', 'age-verification-popup'); ?></li>
                         <li><?php _e('Go to Elementor and create a new popup template.', 'age-verification-popup'); ?></li>
                         <li><?php _e('Add the "Age Verification Popup" widget to your popup.', 'age-verification-popup'); ?></li>
-                        <li><?php _e('Customize the styling and settings in the widget.', 'age-verification-popup'); ?></li>
+                        <li><?php _e('Customize the styling in the widget (colors, fonts, spacing, etc.).', 'age-verification-popup'); ?></li>
                         <li><?php _e('Set the popup display conditions as needed.', 'age-verification-popup'); ?></li>
                     </ol>
                     
-                    <h4><?php _e('Widget Settings Override', 'age-verification-popup'); ?></h4>
-                    <p><?php _e('Settings configured in the Elementor widget will override the global settings above for that specific widget instance.', 'age-verification-popup'); ?></p>
+                    <h4><?php _e('Settings Priority', 'age-verification-popup'); ?></h4>
+                    <p><?php _e('Core functionality (minimum age, redirects, cookie duration) is controlled here in the admin panel. The Elementor widget focuses on styling and visual customization.', 'age-verification-popup'); ?></p>
                 </div>
             </div>
             

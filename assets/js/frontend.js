@@ -5,6 +5,16 @@
 (function($) {
     'use strict';
 
+    // Don't initialize in Elementor editor mode
+    if (typeof elementor !== 'undefined' && elementor.isEditMode) {
+        return;
+    }
+
+    // Also check for Elementor preview mode
+    if (window.location.href.indexOf('elementor-preview') !== -1) {
+        return;
+    }
+
     class AgeVerificationPopup {
         constructor() {
             this.widgets = [];
@@ -23,6 +33,12 @@
             // Find all age verification widgets
             $('.avp-widget').each((index, element) => {
                 const $widget = $(element);
+                
+                // Skip widgets in editor mode
+                if ($widget.hasClass('avp-editor-mode') || $widget.hasClass('avp-preview-mode')) {
+                    return;
+                }
+                
                 const settingsScript = $widget.find('.avp-widget-settings');
                 
                 if (settingsScript.length) {

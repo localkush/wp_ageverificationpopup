@@ -96,56 +96,16 @@ class AVP_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'settings_section',
             [
-                'label' => __('Settings', 'age-verification-popup'),
+                'label' => __('Display & Content Settings', 'age-verification-popup'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
 
         $this->add_control(
-            'minimum_age',
+            'settings_note',
             [
-                'label' => __('Minimum Age', 'age-verification-popup'),
-                'type' => \Elementor\Controls_Manager::NUMBER,
-                'default' => 18,
-                'min' => 13,
-                'max' => 25,
-                'step' => 1,
-            ]
-        );
-
-        $this->add_control(
-            'success_redirect',
-            [
-                'label' => __('Success Redirect URL', 'age-verification-popup'),
-                'type' => \Elementor\Controls_Manager::URL,
-                'placeholder' => __('Leave empty to stay on current page', 'age-verification-popup'),
-                'description' => __('Where to redirect users who pass verification (optional)', 'age-verification-popup'),
-            ]
-        );
-
-        $this->add_control(
-            'failure_redirect',
-            [
-                'label' => __('Failure Redirect URL', 'age-verification-popup'),
-                'type' => \Elementor\Controls_Manager::URL,
-                'placeholder' => __('https://www.google.com', 'age-verification-popup'),
-                'default' => [
-                    'url' => 'https://www.google.com',
-                ],
-                'description' => __('Where to redirect users who fail verification', 'age-verification-popup'),
-            ]
-        );
-
-        $this->add_control(
-            'cookie_duration',
-            [
-                'label' => __('Remember Verification (Days)', 'age-verification-popup'),
-                'type' => \Elementor\Controls_Manager::NUMBER,
-                'default' => 30,
-                'min' => 1,
-                'max' => 365,
-                'step' => 1,
-                'description' => __('How long to remember successful verification', 'age-verification-popup'),
+                'type' => \Elementor\Controls_Manager::RAW_HTML,
+                'raw' => '<div style="background: #e8f4fd; padding: 10px; border-radius: 4px; border-left: 4px solid #2271b1;"><strong>' . __('Note:', 'age-verification-popup') . '</strong> ' . __('Core functionality settings (minimum age, redirects, cookie duration) are controlled in the WordPress admin under Age Verification. These settings below are for display and content customization only.', 'age-verification-popup') . '</div>',
             ]
         );
 
@@ -486,56 +446,91 @@ class AVP_Elementor_Widget extends \Elementor\Widget_Base {
     protected function render() {
         $settings = $this->get_settings_for_display();
         
+        // Check if we're in Elementor editor mode
+        $is_editor_mode = \Elementor\Plugin::$instance->editor->is_edit_mode();
+        
+        // Get global settings from admin panel for core functionality
+        $global_settings = [
+            'minimum_age' => get_option('avp_minimum_age', 18),
+            'success_redirect' => get_option('avp_success_redirect', ''),
+            'failure_redirect' => get_option('avp_failure_redirect', 'https://www.google.com'),
+            'cookie_duration' => get_option('avp_cookie_duration', 30),
+        ];
+        
+        // Use widget settings for content (with fallbacks to global settings)
+        $content_settings = [
+            'popup_title' => !empty($settings['popup_title']) ? $settings['popup_title'] : get_option('avp_popup_title', __('Age Verification Required', 'age-verification-popup')),
+            'popup_message' => !empty($settings['popup_message']) ? $settings['popup_message'] : get_option('avp_popup_message', __('You must be 18 or older to access this website.', 'age-verification-popup')),
+            'button_text' => !empty($settings['button_text']) ? $settings['button_text'] : get_option('avp_button_text', __('Verify Age', 'age-verification-popup')),
+            'date_label' => !empty($settings['date_label']) ? $settings['date_label'] : get_option('avp_date_label', __('Enter your birth date:', 'age-verification-popup')),
+            'cancel_button_text' => !empty($settings['cancel_button_text']) ? $settings['cancel_button_text'] : __('I am under 18', 'age-verification-popup'),
+        ];
+        
         // Generate unique ID for this widget instance
         $widget_id = 'avp-' . $this->get_id();
         
+        // Add editor-specific class if in editor mode
+        $widget_class = 'avp-widget';
+        if ($is_editor_mode) {
+            $widget_class .= ' avp-editor-mode';
+        }
+        
         ?>
-        <div class="avp-widget" data-widget-id="<?php echo esc_attr($widget_id); ?>">
-            <div class="avp-popup-overlay" id="<?php echo esc_attr($widget_id); ?>-overlay" style="display: none;">
-                <div class="avp-popup-content">
-                    <div class="avp-popup-header">
-                        <h2 class="avp-popup-title"><?php echo esc_html($settings['popup_title']); ?></h2>
+        <div class="<?php echo esc_attr($widget_class); ?>" data-widget-id="<?php echo esc_attr($widget_id); ?>">
+            <div class="avp-popup-overlay" id="<?php echo esc_attr($widget_id); ?>-overlay" style="<?php echo $is_editor_mode ? 'display: block; position: relative; background: rgba(0,0,0,0.1); min-height: 400px; display: flex; align-items: center; justify-content: center;' : 'display: none;'; ?>">
+                <div class="avp-popup-content" style="<?php echo $is_editor_mode ? 'position: relative; transform: none; top: auto; left: auto; max-width: 500px; width: 90%; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);' : ''; ?>">
+                    <div class="avp-popup-header" style="<?php echo $is_editor_mode ? 'text-align: center; margin-bottom: 20px;' : ''; ?>">
+                        <h2 class="avp-popup-title" style="<?php echo $is_editor_mode ? 'margin: 0; font-size: 24px; color: #333;' : ''; ?>"><?php echo esc_html($content_settings['popup_title']); ?></h2>
                     </div>
                     
-                    <div class="avp-popup-body">
-                        <p class="avp-popup-message"><?php echo esc_html($settings['popup_message']); ?></p>
+                    <div class="avp-popup-body" style="<?php echo $is_editor_mode ? 'margin-bottom: 25px;' : ''; ?>">
+                        <p class="avp-popup-message" style="<?php echo $is_editor_mode ? 'margin: 0 0 20px; color: #666; line-height: 1.6;' : ''; ?>"><?php echo esc_html($content_settings['popup_message']); ?></p>
                         
                         <div class="avp-form-group">
-                            <label for="<?php echo esc_attr($widget_id); ?>-birthdate" class="avp-date-label">
-                                <?php echo esc_html($settings['date_label']); ?>
+                            <label for="<?php echo esc_attr($widget_id); ?>-birthdate" class="avp-date-label" style="<?php echo $is_editor_mode ? 'display: block; margin-bottom: 8px; font-weight: 500; color: #333;' : ''; ?>">
+                                <?php echo esc_html($content_settings['date_label']); ?>
                             </label>
                             <input type="date" 
                                    id="<?php echo esc_attr($widget_id); ?>-birthdate" 
                                    class="avp-date-input" 
+                                   style="<?php echo $is_editor_mode ? 'width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;' : ''; ?>"
                                    required>
                         </div>
                         
                         <div class="avp-error-message" style="display: none;"></div>
                     </div>
                     
-                    <div class="avp-popup-footer">
-                        <button type="button" class="avp-button avp-verify-btn">
-                            <?php echo esc_html($settings['button_text']); ?>
+                    <div class="avp-popup-footer" style="<?php echo $is_editor_mode ? 'display: flex; gap: 10px; justify-content: center;' : ''; ?>">
+                        <button type="button" class="avp-button avp-verify-btn" style="<?php echo $is_editor_mode ? 'padding: 12px 24px; background: #007cba; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500;' : ''; ?>">
+                            <?php echo esc_html($content_settings['button_text']); ?>
                         </button>
-                        <button type="button" class="avp-button avp-cancel-btn">
-                            <?php echo esc_html($settings['cancel_button_text']); ?>
+                        <button type="button" class="avp-button avp-cancel-btn" style="<?php echo $is_editor_mode ? 'padding: 12px 24px; background: #666; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500;' : ''; ?>">
+                            <?php echo esc_html($content_settings['cancel_button_text']); ?>
                         </button>
                     </div>
+                    
+                    <?php if ($is_editor_mode): ?>
+                    <div style="margin-top: 15px; text-align: center; font-size: 12px; color: #999; font-style: italic;">
+                        <?php _e('Preview Mode - Popup will function normally on the frontend', 'age-verification-popup'); ?>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
         
+        <?php if (!$is_editor_mode): ?>
         <script type="application/json" class="avp-widget-settings">
         <?php echo wp_json_encode([
             'widget_id' => $widget_id,
-            'minimum_age' => intval($settings['minimum_age']),
-            'success_redirect' => !empty($settings['success_redirect']['url']) ? $settings['success_redirect']['url'] : '',
-            'failure_redirect' => !empty($settings['failure_redirect']['url']) ? $settings['failure_redirect']['url'] : 'https://www.google.com',
-            'cookie_duration' => intval($settings['cookie_duration']),
+            'minimum_age' => intval($global_settings['minimum_age']),
+            'success_redirect' => $global_settings['success_redirect'],
+            'failure_redirect' => $global_settings['failure_redirect'],
+            'cookie_duration' => intval($global_settings['cookie_duration']),
             'show_on_load' => $settings['show_on_load'] === 'yes',
             'trigger_selector' => $settings['trigger_selector'] ?? '',
         ]); ?>
         </script>
+        <?php endif; ?>
         <?php
     }
 
@@ -543,26 +538,37 @@ class AVP_Elementor_Widget extends \Elementor\Widget_Base {
         ?>
         <#
         var widgetId = 'avp-' + view.getID();
+        
+        // Provide fallbacks for empty settings
+        var popupTitle = settings.popup_title || '<?php echo esc_js(__('Age Verification Required', 'age-verification-popup')); ?>';
+        var popupMessage = settings.popup_message || '<?php echo esc_js(__('You must be 18 or older to access this website. Please enter your birth date to continue.', 'age-verification-popup')); ?>';
+        var dateLabel = settings.date_label || '<?php echo esc_js(__('Enter your birth date:', 'age-verification-popup')); ?>';
+        var buttonText = settings.button_text || '<?php echo esc_js(__('Verify Age', 'age-verification-popup')); ?>';
+        var cancelButtonText = settings.cancel_button_text || '<?php echo esc_js(__('I am under 18', 'age-verification-popup')); ?>';
         #>
-        <div class="avp-widget" data-widget-id="{{ widgetId }}">
-            <div class="avp-popup-overlay" style="display: block; position: relative; background: rgba(0,0,0,0.1);">
-                <div class="avp-popup-content" style="position: relative; transform: none; top: auto; left: auto;">
-                    <div class="avp-popup-header">
-                        <h2 class="avp-popup-title">{{{ settings.popup_title }}}</h2>
+        <div class="avp-widget avp-preview-mode" data-widget-id="{{ widgetId }}">
+            <div class="avp-popup-overlay" style="display: block; position: relative; background: rgba(0,0,0,0.1); min-height: 400px; display: flex; align-items: center; justify-content: center;">
+                <div class="avp-popup-content" style="position: relative; transform: none; top: auto; left: auto; max-width: 500px; width: 90%; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+                    <div class="avp-popup-header" style="text-align: center; margin-bottom: 20px;">
+                        <h2 class="avp-popup-title" style="margin: 0; font-size: 24px; color: #333;">{{{ popupTitle }}}</h2>
                     </div>
                     
-                    <div class="avp-popup-body">
-                        <p class="avp-popup-message">{{{ settings.popup_message }}}</p>
+                    <div class="avp-popup-body" style="margin-bottom: 25px;">
+                        <p class="avp-popup-message" style="margin: 0 0 20px; color: #666; line-height: 1.6;">{{{ popupMessage }}}</p>
                         
                         <div class="avp-form-group">
-                            <label class="avp-date-label">{{{ settings.date_label }}}</label>
-                            <input type="date" class="avp-date-input" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            <label class="avp-date-label" style="display: block; margin-bottom: 8px; font-weight: 500; color: #333;">{{{ dateLabel }}}</label>
+                            <input type="date" class="avp-date-input" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px;">
                         </div>
                     </div>
                     
-                    <div class="avp-popup-footer">
-                        <button type="button" class="avp-button avp-verify-btn">{{{ settings.button_text }}}</button>
-                        <button type="button" class="avp-button avp-cancel-btn">{{{ settings.cancel_button_text }}}</button>
+                    <div class="avp-popup-footer" style="display: flex; gap: 10px; justify-content: center;">
+                        <button type="button" class="avp-button avp-verify-btn" style="padding: 12px 24px; background: #007cba; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500;">{{{ buttonText }}}</button>
+                        <button type="button" class="avp-button avp-cancel-btn" style="padding: 12px 24px; background: #666; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500;">{{{ cancelButtonText }}}</button>
+                    </div>
+                    
+                    <div style="margin-top: 15px; text-align: center; font-size: 12px; color: #999; font-style: italic;">
+                        <?php _e('Preview Mode - Popup will function normally on the frontend', 'age-verification-popup'); ?>
                     </div>
                 </div>
             </div>

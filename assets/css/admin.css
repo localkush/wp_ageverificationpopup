@@ -103,6 +103,7 @@
     font-style: italic;
     color: #646970;
     font-size: 13px;
+    line-height: 1.4;
 }
 
 /* Button Styling */
@@ -368,5 +369,46 @@
         background: #1e2124;
         border-color: #3c434a;
         color: #f0f0f1;
+    }
+    
+    /* Fix description text color for better readability */
+    .avp-admin-main .form-table .description {
+        color: #c3c4c7;
+    }
+    
+    /* Fix form labels and other text elements */
+    .avp-admin-main .form-table th label {
+        color: #f0f0f1;
+    }
+    
+    /* Fix input styling in dark mode */
+    .avp-admin-main .form-table input[type="text"],
+    .avp-admin-main .form-table input[type="url"],
+    .avp-admin-main .form-table input[type="number"],
+    .avp-admin-main .form-table textarea {
+        background: #23282d;
+        border-color: #3c434a;
+        color: #f0f0f1;
+    }
+    
+    .avp-admin-main .form-table input[type="text"]:focus,
+    .avp-admin-main .form-table input[type="url"]:focus,
+    .avp-admin-main .form-table input[type="number"]:focus,
+    .avp-admin-main .form-table textarea:focus {
+        border-color: #2271b1;
+        background: #1d2327;
+    }
+    
+    /* Fix sidebar content */
+    .avp-admin-sidebar .postbox .inside {
+        color: #f0f0f1;
+    }
+    
+    .avp-admin-sidebar .postbox h4 {
+        color: #f0f0f1;
+    }
+    
+    .avp-admin-sidebar .postbox p {
+        color: #c3c4c7;
     }
 } 

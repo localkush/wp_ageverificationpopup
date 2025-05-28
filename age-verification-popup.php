@@ -3,7 +3,7 @@
  * Plugin Name: Age Verification Popup for Elementor
  * Plugin URI: https://creativewebconcept.ca
  * Description: A customizable age verification popup that integrates with Elementor Pro. Verify user age with configurable settings and redirect options.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Charles W. (localkush@github)
  * License: GPL v2 or later
  * Text Domain: age-verification-popup
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 // Define plugin constants
 define('AVP_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('AVP_PLUGIN_PATH', plugin_dir_path(__FILE__));
-define('AVP_PLUGIN_VERSION', '1.0.0');
+define('AVP_PLUGIN_VERSION', '1.0.1');
 
 /**
  * Main Age Verification Popup Class
