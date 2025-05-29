@@ -7,168 +7,29 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Handle form submission
-if (isset($_POST['submit']) && wp_verify_nonce($_POST['avp_nonce'], 'avp_settings')) {
-    update_option('avp_minimum_age', intval($_POST['avp_minimum_age']));
-    update_option('avp_success_redirect', sanitize_url($_POST['avp_success_redirect']));
-    update_option('avp_failure_redirect', sanitize_url($_POST['avp_failure_redirect']));
-    update_option('avp_cookie_duration', intval($_POST['avp_cookie_duration']));
-    update_option('avp_popup_title', sanitize_text_field($_POST['avp_popup_title']));
-    update_option('avp_popup_message', sanitize_textarea_field($_POST['avp_popup_message']));
-    update_option('avp_button_text', sanitize_text_field($_POST['avp_button_text']));
-    update_option('avp_date_label', sanitize_text_field($_POST['avp_date_label']));
-    
-    echo '<div class="notice notice-success is-dismissible"><p>' . __('Settings saved successfully!', 'age-verification-popup') . '</p></div>';
-}
+// No form submission to handle for these settings anymore
 
-// Get current settings
-$minimum_age = get_option('avp_minimum_age', 18);
-$success_redirect = get_option('avp_success_redirect', '');
-$failure_redirect = get_option('avp_failure_redirect', 'https://www.google.com');
-$cookie_duration = get_option('avp_cookie_duration', 30);
-$popup_title = get_option('avp_popup_title', __('Age Verification Required', 'age-verification-popup'));
-$popup_message = get_option('avp_popup_message', __('You must be 18 or older to access this website.', 'age-verification-popup'));
-$button_text = get_option('avp_button_text', __('Verify Age', 'age-verification-popup'));
-$date_label = get_option('avp_date_label', __('Enter your birth date:', 'age-verification-popup'));
+// No need to get these options globally here anymore
+
 ?>
 
 <div class="wrap">
     <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
     
-    <div class="avp-help-text">
-        <h4><?php _e('Global Default Settings', 'age-verification-popup'); ?></h4>
-        <p><?php _e('These are the default settings that will be used by all Age Verification widgets. You can override styling and some content settings in individual Elementor widgets, but core functionality settings (like minimum age and redirect URLs) are controlled here.', 'age-verification-popup'); ?></p>
+    <div class="avp-help-text" style="margin-bottom: 20px; padding: 15px; background-color: #f7f7f7; border-left: 4px solid #72aee6;">
+        <h4><?php _e('Plugin Configuration Information', 'age-verification-popup'); ?></h4>
+        <p><?php _e('All operational and content settings for the Age Verification Popup are now managed directly within the <strong>Age Verification Popup widget in the Elementor editor</strong>.', 'age-verification-popup'); ?></p>
+        <p><?php _e('This includes: Minimum Age, Success/Failure Redirect URLs, Cookie Duration, Popup Title, Messages, Button Texts, and Date Labels.', 'age-verification-popup'); ?></p>
+        <p><?php _e('To configure a popup, please add or edit the Age Verification Popup widget in your Elementor templates (e.g., an Elementor Popup template).', 'age-verification-popup'); ?></p>
     </div>
     
     <div class="avp-admin-container">
         <div class="avp-admin-main">
-            <form method="post" action="">
-                <?php wp_nonce_field('avp_settings', 'avp_nonce'); ?>
-                
-                <table class="form-table" role="presentation">
-                    <tbody>
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_minimum_age"><?php _e('Minimum Age', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <input type="number" 
-                                       id="avp_minimum_age" 
-                                       name="avp_minimum_age" 
-                                       value="<?php echo esc_attr($minimum_age); ?>" 
-                                       min="13" 
-                                       max="25" 
-                                       class="small-text" />
-                                <p class="description"><?php _e('Minimum age required to access the website.', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_success_redirect"><?php _e('Success Redirect URL', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <input type="url" 
-                                       id="avp_success_redirect" 
-                                       name="avp_success_redirect" 
-                                       value="<?php echo esc_attr($success_redirect); ?>" 
-                                       class="regular-text" 
-                                       placeholder="<?php _e('Leave empty to stay on current page', 'age-verification-popup'); ?>" />
-                                <p class="description"><?php _e('Where to redirect users who pass age verification (optional).', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_failure_redirect"><?php _e('Failure Redirect URL', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <input type="url" 
-                                       id="avp_failure_redirect" 
-                                       name="avp_failure_redirect" 
-                                       value="<?php echo esc_attr($failure_redirect); ?>" 
-                                       class="regular-text" 
-                                       placeholder="https://www.google.com" 
-                                       required />
-                                <p class="description"><?php _e('Where to redirect users who fail age verification.', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_cookie_duration"><?php _e('Remember Verification (Days)', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <input type="number" 
-                                       id="avp_cookie_duration" 
-                                       name="avp_cookie_duration" 
-                                       value="<?php echo esc_attr($cookie_duration); ?>" 
-                                       min="1" 
-                                       max="365" 
-                                       class="small-text" />
-                                <p class="description"><?php _e('How many days to remember successful verification.', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_popup_title"><?php _e('Popup Title', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <input type="text" 
-                                       id="avp_popup_title" 
-                                       name="avp_popup_title" 
-                                       value="<?php echo esc_attr($popup_title); ?>" 
-                                       class="regular-text" />
-                                <p class="description"><?php _e('Title displayed in the age verification popup.', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_popup_message"><?php _e('Popup Message', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <textarea id="avp_popup_message" 
-                                          name="avp_popup_message" 
-                                          rows="3" 
-                                          class="large-text"><?php echo esc_textarea($popup_message); ?></textarea>
-                                <p class="description"><?php _e('Message displayed in the age verification popup.', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_button_text"><?php _e('Verify Button Text', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <input type="text" 
-                                       id="avp_button_text" 
-                                       name="avp_button_text" 
-                                       value="<?php echo esc_attr($button_text); ?>" 
-                                       class="regular-text" />
-                                <p class="description"><?php _e('Text for the age verification button.', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                        
-                        <tr>
-                            <th scope="row">
-                                <label for="avp_date_label"><?php _e('Date Input Label', 'age-verification-popup'); ?></label>
-                            </th>
-                            <td>
-                                <input type="text" 
-                                       id="avp_date_label" 
-                                       name="avp_date_label" 
-                                       value="<?php echo esc_attr($date_label); ?>" 
-                                       class="regular-text" />
-                                <p class="description"><?php _e('Label for the birth date input field.', 'age-verification-popup'); ?></p>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <?php submit_button(); ?>
-            </form>
+            <p><?php _e('There are no global settings to configure here. Please use the Elementor widget for all configurations.', 'age-verification-popup'); ?></p>
+            <?php
+            // Example: You could add other non-settings related info here in the future if needed.
+            // For example, links to documentation, support, or other tools.
+            ?>
         </div>
         
         <div class="avp-admin-sidebar">
@@ -176,15 +37,11 @@ $date_label = get_option('avp_date_label', __('Enter your birth date:', 'age-ver
                 <h3 class="hndle"><?php _e('How to Use', 'age-verification-popup'); ?></h3>
                 <div class="inside">
                     <ol>
-                        <li><?php _e('Configure your global settings above and save them.', 'age-verification-popup'); ?></li>
-                        <li><?php _e('Go to Elementor and create a new popup template.', 'age-verification-popup'); ?></li>
-                        <li><?php _e('Add the "Age Verification Popup" widget to your popup.', 'age-verification-popup'); ?></li>
-                        <li><?php _e('Customize the styling in the widget (colors, fonts, spacing, etc.).', 'age-verification-popup'); ?></li>
-                        <li><?php _e('Set the popup display conditions as needed.', 'age-verification-popup'); ?></li>
+                        <li><?php _e('Go to Elementor and create or edit a popup template (or any page/template where you want the verification).', 'age-verification-popup'); ?></li>
+                        <li><?php _e('Add the "Age Verification Popup" widget to your Elementor layout.', 'age-verification-popup'); ?></li>
+                        <li><?php _e('Configure all settings (minimum age, redirects, messages, styling, etc.) directly in the widget controls in the Elementor editor panel.', 'age-verification-popup'); ?></li>
+                        <li><?php _e('If using an Elementor Popup, set its display conditions as needed.', 'age-verification-popup'); ?></li>
                     </ol>
-                    
-                    <h4><?php _e('Settings Priority', 'age-verification-popup'); ?></h4>
-                    <p><?php _e('Core functionality (minimum age, redirects, cookie duration) is controlled here in the admin panel. The Elementor widget focuses on styling and visual customization.', 'age-verification-popup'); ?></p>
                 </div>
             </div>
             
@@ -206,6 +63,7 @@ $date_label = get_option('avp_date_label', __('Enter your birth date:', 'age-ver
                     <button type="button" id="avp-clear-cookies" class="button button-secondary">
                         <?php _e('Clear All Verification Cookies', 'age-verification-popup'); ?>
                     </button>
+                    <p id="avp-clear-cookies-feedback" style="margin-top: 10px;"></p> 
                 </div>
             </div>
         </div>
@@ -249,24 +107,37 @@ $date_label = get_option('avp_date_label', __('Enter your birth date:', 'age-ver
 .avp-admin-sidebar .postbox li {
     margin-bottom: 8px;
 }
-
-@media (max-width: 782px) {
-    .avp-admin-container {
-        flex-direction: column;
-    }
-    
-    .avp-admin-sidebar {
-        width: 100%;
-    }
-}
 </style>
 
-<script>
+<script type="text/javascript">
 jQuery(document).ready(function($) {
     $('#avp-clear-cookies').on('click', function() {
-        // Clear the verification cookie
-        document.cookie = 'avp_verified=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        alert('<?php _e('Verification cookies cleared!', 'age-verification-popup'); ?>');
-    });
+            var feedbackEl = $('#avp-clear-cookies-feedback');
+            feedbackEl.text('<?php echo esc_js(__("Processing...", "age-verification-popup")); ?>').css('color', 'inherit');
+            
+            // Basic cookie clearing by setting expiry to the past
+            // This will clear cookies accessible via JS for the current path and domain
+            var cookies = document.cookie.split(";");
+            var clearedCount = 0;
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i];
+                var eqPos = cookie.indexOf("=");
+                var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                if (name.trim().startsWith('avp_verified')) { // Target specific cookie
+                    document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+                    clearedCount++;
+                }
+            }
+
+            if (clearedCount > 0) {
+                 feedbackEl.text('<?php echo esc_js(__("AVP verification cookie(s) cleared. You may need to reload the page to see changes on the frontend.", "age-verification-popup")); ?>').css('color', 'green');
+            } else {
+                 feedbackEl.text('<?php echo esc_js(__("No AVP verification cookies found to clear in the browser.", "age-verification-popup")); ?>').css('color', 'orange');
+            }
+
+            // Note: This only clears cookies accessible to JavaScript. 
+            // HttpOnly cookies set by server-side (if any were) cannot be cleared this way.
+            // Our current cookie is JS accessible, so this should work.
+        });
 });
 </script> 

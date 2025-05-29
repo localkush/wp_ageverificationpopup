@@ -2,6 +2,59 @@
  * Age Verification Popup Frontend Styles
  */
 
+/* Widget Content Container */
+.avp-widget-content {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* text-align will be set by Elementor control */
+}
+
+/* Ensure form and buttons container inherit text-align for consistency with the new control */
+.avp-widget-content .avp-form,
+.avp-widget-content .avp-buttons {
+    text-align: inherit; /* Inherit from .avp-widget-content */
+}
+
+/* Individual elements inside the form will also inherit, or can be styled further if needed */
+.avp-widget-content .avp-date-label,
+.avp-widget-content .avp-date-input,
+.avp-widget-content .avp-error-message,
+.avp-widget-content .avp-success-message {
+    text-align: inherit; /* Ensure text within these elements also respects the overall alignment */
+}
+
+/* Special handling for input field when centered: make it block and use auto margins */
+/* This can be more specific if needed, or controlled by other Elementor settings */
+.avp-widget-content[style*="text-align: center"] .avp-date-input {
+    display: block; /* Or inline-block if preferred, with text-align:center on parent */
+    margin-left: auto;
+    margin-right: auto;
+    /* max-width: 250px; /* Optional: constrain width when centered */
+}
+
+/* Preview Mode Styling */
+.avp-widget-content.avp-preview-mode {
+    border: 2px dashed #007cba;
+    background: #f8f9fa;
+}
+
+.avp-preview-note {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 8px 12px;
+    text-align: center;
+    font-size: 12px;
+    font-style: italic;
+    border-top: 1px solid #bbdefb;
+    margin: 0;
+}
+
 /* Prevent body scroll when popup is open */
 body.avp-popup-open {
     overflow: hidden;
@@ -23,8 +76,9 @@ body.avp-popup-open {
     -webkit-backdrop-filter: blur(3px);
 }
 
-/* Popup Content Container */
-.avp-popup-content {
+/* Popup Content Container (now used for widget content) */
+.avp-popup-content,
+.avp-widget-content {
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -33,7 +87,6 @@ body.avp-popup-open {
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
-    animation: avp-popup-enter 0.3s ease-out;
     padding: 0;
 }
 
@@ -120,6 +173,18 @@ body.avp-popup-open {
     margin-top: 15px;
     font-size: 14px;
     border: 1px solid #f5c6cb;
+    display: none;
+}
+
+/* Success Message */
+.avp-success-message {
+    background-color: #d1edff;
+    color: #0c5460;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin-top: 15px;
+    font-size: 14px;
+    border: 1px solid #bee5eb;
     display: none;
 }
 
@@ -350,6 +415,12 @@ body.avp-popup-open {
         background-color: #2d1b1f;
         color: #f8d7da;
         border-color: #842029;
+    }
+    
+    .avp-success-message {
+        background-color: #1b2d2f;
+        color: #d1edff;
+        border-color: #0c5460;
     }
 }
 
